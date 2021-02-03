@@ -1,0 +1,41 @@
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>CyberCerberus</title>
+</head>
+<body>
+
+<h1>CyberCerberus</h1>
+<p>CyberCerberus is demo web application for show main functional of biological access control system. Application use OpenCV, TensorFlow, SpringBoot, Keras technologies. Author: Kostianikov Vladislav IO-91mp.</p>
+<div th:if="${message}">
+    <h2 th:text="${message}" />
+</div>
+
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/uploadForm">
+        <table align="justify">
+            <tr><td>Choose image in visible range to upload (max. 1.5M):</td><td><input type="file" name="fileV" required /></td></tr>
+            <tr><td>Choose image in LVIR range to upload (max. 1.5M):</td><td><input type="file" name="fileR" required /></td></tr>
+            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+        </table>
+    </form>
+</div>
+<hr th:if="${recognitionFullResult}" />
+<div th:if="${recognitionFullResult.imageRPreview}">
+    <div align="center">Inputed images:</div>
+    <img align="center" th:src="@{/img/V/{filename}(filename = ${recognitionFullResult.imageVPreview})}" >
+    <img align="center" th:src="@{/img/R/__${recognitionFullResult.imageRPreview}__}" />
+    <hr />
+    <div align="center">Preprocessed image:</div>
+    <img align="center" th:src="@{/img/D/__${recognitionFullResult.imageDPreview}__}" />
+    <hr />
+</div>
+
+<div align="center" th:if="${recognitionFullResult}">
+    Access is allow. Hello
+    <p th:text="${recognitionFullResult.recognition.name} + ' : ' + ${recognitionFullResult.recognition.confidence}" />
+
+</div>
+<hr />
+
+</body>
+</html>

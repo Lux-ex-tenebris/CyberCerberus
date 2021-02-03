@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CyberCerberus</title>
+</head>
+<body>
+
+<h1>CyberCerberus</h1>
+<p>CyberCerberus is demo web application for show main functional of biological access control system. Application use OpenCV, TensorFlow, SpringBoot, Keras technologies. Author: Kostianikov Vladislav IO-91mp.</p>
+<div th:if="${message}">
+    <h2 th:text="${message}" />
+</div>
+
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/uploadPForm">
+        <table>
+            <tr><td>Choose image to upload (max. 1.5M):</td><td><input type="file" name="file" required /></td></tr>
+            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+        </table>
+    </form>
+</div>
+<hr th:if="${recognitionResult}" />
+<div th:if="${recognitionResult}">
+    <div>Uploaded image:</div>
+    <img src="/img/DP/${recognitionResult.imagePreview}" />
+    <hr />
+</div>
+
+<div th:if="${recognitionResult}">
+    Found objects:
+    <li th:text="${recognitionResult.recognition.name} + ' : ' + ${recognitionResult.recognition.confidence}" />
+
+</div>
+<hr />
+
+</body>
+</html>
