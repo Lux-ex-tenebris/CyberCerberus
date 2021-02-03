@@ -29,8 +29,8 @@ public class Preprocessor {
     private CascadeClassifier faceCascade;
 
 
-    public Preprocessor(@Value("${tensor.filenameFaceCascade}") String filenameFaceCascade,
-                        @Value("${tensor.filenameFacemark}") String filenameFacemark) {
+    public Preprocessor(@Value("${preprocessor.filenameFaceCascade}") String filenameFaceCascade,
+                        @Value("${preprocessor.filenameFacemark}") String filenameFacemark) {
         this.filenameFaceCascade = filenameFaceCascade;
         this.filenameFacemark = filenameFacemark;
     }

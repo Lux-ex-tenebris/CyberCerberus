@@ -24,11 +24,11 @@ public class ImageStorageService implements StorageService {
     private final Path rootRLocation;
 
 
-    public ImageStorageService(@Value("${tensor.pathToDImage}")
+    public ImageStorageService(@Value("${result.pathToDImage}")
                                             String rootDLocation,
-                                    @Value("${tensor.pathToVImage}")
+                                    @Value("${result.pathToVImage}")
                                             String rootVLocation,
-                                    @Value("${tensor.pathToRImage}")
+                                    @Value("${result.pathToRImage}")
                                             String rootRLocation) {
         this.rootDLocation = Paths.get(rootDLocation);
         this.rootVLocation = Paths.get(rootVLocation);
@@ -40,7 +40,7 @@ public class ImageStorageService implements StorageService {
 
 
 
-        String pathToImage = null;
+        String pathToImage;
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
