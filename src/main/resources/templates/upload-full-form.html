@@ -20,7 +20,7 @@
     </form>
 </div>
 <hr th:if="${recognitionFullResult}" />
-<div th:if="${recognitionFullResult.imageRPreview}">
+<div th:if="${recognitionFullResult}">
     <div align="center">Inputed images:</div>
     <img align="center" th:src="@{/img/V/{filename}(filename = ${recognitionFullResult.imageVPreview})}" >
     <img align="center" th:src="@{/img/R/__${recognitionFullResult.imageRPreview}__}" />
@@ -33,7 +33,7 @@
 <div align="center" th:if="${recognitionFullResult}">
     Access is allow. Hello
     <p th:text="${recognitionFullResult.recognition.name} + ' : ' + ${recognitionFullResult.recognition.confidence}" />
-
+    <p><a href="/user">Go to user profile</a></p>
 </div>
 <hr />
 

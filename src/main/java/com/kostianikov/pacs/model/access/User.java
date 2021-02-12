@@ -1,8 +1,11 @@
-package com.kostianikov.pacs.model;
+package com.kostianikov.pacs.model.access;
 
+
+import lombok.Data;
 
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -16,6 +19,17 @@ public class User {
     @Column(name = "pathtophoto")
     private String pathtophoto;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
+
+    @Column(name = "password")
+    private String password;
+
     protected User(){
 
     }
@@ -27,38 +41,9 @@ public class User {
                 ", name='" + name + '\'' +
                 ", networkid=" + networkid +
                 ", pathtophoto='" + pathtophoto + '\'' +
+                ", role=" + role +
+                ", status='" + status + '\'' +
                 '}';
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getNetworkid() {
-        return networkid;
-    }
-
-    public void setNetworkid(Long networkid) {
-        this.networkid = networkid;
-    }
-
-    public String getPathtophoto() {
-        return pathtophoto;
-    }
-
-    public void setPathtophoto(String pathtophoto) {
-        this.pathtophoto = pathtophoto;
-    }
 }

@@ -1,6 +1,6 @@
 package com.kostianikov.pacs.service;
 
-import com.kostianikov.pacs.model.User;
+import com.kostianikov.pacs.model.access.User;
 import com.kostianikov.pacs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

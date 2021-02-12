@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,7 @@ public class PredictFullController {
         return "upload-full-form";
     }
 
+
     @GetMapping("/img/{pathCode}/{filename}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String pathCode, @PathVariable String filename) {
@@ -62,33 +64,8 @@ public class PredictFullController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-//    @RequestMapping(value = "/img/{name}", method = RequestMethod.GET)
-//    public void handleGetImg(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String name) throws IOException {
-//        BufferedImage image = null;
-//        switch (name){
-//            case("DP"):
-//                image = (BufferedImage) httpServletRequest.getSession().getAttribute(IMAGE_DP_ATTR);
-//                break;
-//            case("VP"):
-//                image = (BufferedImage) httpServletRequest.getSession().getAttribute(IMAGE_VP_ATTR);
-//                break;
-//            case("RP"):
-//                image = (BufferedImage) httpServletRequest.getSession().getAttribute(IMAGE_RP_ATTR);
-//                break;
-//            default:
-//                break;
-//        }
-//
-//        //BufferedImage image = (BufferedImage) httpServletRequest.getSession().getAttribute(IMAGE_DP_ATTR);
-//        if (image != null) {
-//            httpServletResponse.setContentType("image/png");
-//            ImageIO.write(image, "png", httpServletResponse.getOutputStream());
-//        } else {
-//            httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
-//        }
-//    }
 
-    @RequestMapping(value = "/uploadForm", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadForm1", method = RequestMethod.POST)
     public String handleUploadForm(@RequestParam(value = "fileV") MultipartFile fileV,
                                    @RequestParam(value = "fileR") MultipartFile fileR,
                                    @Value("${tensor.model.threshold}") float threshold,
@@ -108,10 +85,6 @@ public class PredictFullController {
             return "rejected-form";
         }
 
-        //Recognition recognition = recognitionFullResult.getRecognition();
-        //httpServletRequest.getSession().setAttribute(IMAGE_VP_ATTR, recognitionFullResult.getImageVPreview());
-        //ttpServletRequest.getSession().setAttribute(IMAGE_RP_ATTR, recognitionFullResult.getImageRPreview());
-        //httpServletRequest.getSession().setAttribute(IMAGE_DP_ATTR, recognitionFullResult.getImageDPreview());
         log.debug("Found objects: {}", recognitionFullResult.getRecognition());
         if (recognitionFullResult.getRecognition() == null) {
             model.addAttribute("message", "No objects found");

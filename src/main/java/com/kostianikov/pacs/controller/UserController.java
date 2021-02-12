@@ -1,6 +1,6 @@
 package com.kostianikov.pacs.controller;
 
-import com.kostianikov.pacs.model.User;
+import com.kostianikov.pacs.model.access.User;
 import com.kostianikov.pacs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -23,6 +25,7 @@ public class UserController {
 
 
 
+    //@PreAuthorize("hasAuthoriti('read:all')")
     @GetMapping("/users")
     public String findAll(Model model){
         List<User> users = userService.findAll();
@@ -30,15 +33,12 @@ public class UserController {
         return "user-list";
     }
 
-    @GetMapping("/user-create")
-    public String createUserForm(User user){
-        return "user-create";
+    //@PreAuthorize("hasAuthoriti('read:self')")
+    @GetMapping("/user")
+    public String getUserpage(HttpServletRequest request, Model model, Principal principal){
+        model.addAttribute("name", principal.getName());
+        return "user-list";
     }
 
-    @PostMapping
-    public String createUser(User user){
-        userService.saveUser(user);
-        return "redirect:/users";
-    }
 
 }
