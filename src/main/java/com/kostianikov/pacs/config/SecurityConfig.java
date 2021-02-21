@@ -85,13 +85,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return doubleImageAuthenticationFilter;
     }
 
-    private void loginFailureHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) {
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+    private void loginFailureHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
+        //httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.sendRedirect(httpServletRequest.getContextPath()+"/reject");
+        httpServletRequest.getSession().setAttribute("Message", e.toString());
     }
 
     private void loginSuccessHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         httpServletResponse.sendRedirect(httpServletRequest.getContextPath()+"/user");
-
     }
 
 //    @Override

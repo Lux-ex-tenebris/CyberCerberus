@@ -1,6 +1,7 @@
 package com.kostianikov.pacs.service;
 
 import com.kostianikov.pacs.controller.error.NoFaceException;
+import com.kostianikov.pacs.controller.error.RejectException;
 import com.kostianikov.pacs.model.data.Recognition;
 import com.kostianikov.pacs.model.data.RecognitionFullResult;
 import com.kostianikov.pacs.model.data.RecognitionResult;
@@ -31,6 +32,7 @@ public class RequestToPyService {
     private final Preprocessor preprocessor;
     private final String pythonServerURL;
     private final StorageService storageService;
+    private final float threshold;
 
     public RequestToPyService(RestTemplateBuilder restTemplateBuilder,
                               @Value("${remote.pythonServerURL}") String pythonServerURL,
@@ -40,6 +42,8 @@ public class RequestToPyService {
                                       String pathToVImage,
                               @Value("${result.pathToRImage}")
                                       String pathToRImage,
+                              @Value("${model.threshold}")
+                                      float threshold,
                               ImageHandler imageHandler,
                               Preprocessor preprocessor,
                               StorageService storageService) {
@@ -51,6 +55,7 @@ public class RequestToPyService {
         this.preprocessor = preprocessor;
         this.pythonServerURL = pythonServerURL;
         this.storageService = storageService;
+        this.threshold = threshold;
     }
 
     public RecognitionResult processImageFile(MultipartFile file) {
@@ -78,7 +83,8 @@ public class RequestToPyService {
     }
 
 
-    public RecognitionFullResult processImageFile(RecognitionFullResult recognitionFullResult) throws NoFaceException {
+    public RecognitionFullResult processImageFile(RecognitionFullResult recognitionFullResult
+                                                  ) throws NoFaceException, RejectException {
 
         //String nameVImage = imageHandler.readAndSave(fileV,pathToVImage);
         //String nameRImage = imageHandler.readAndSave(fileR,pathToRImage);
@@ -95,6 +101,13 @@ public class RequestToPyService {
 
         recognitionFullResult.setRecognition(recognition);
 
-      return  recognitionFullResult;
+        if(recognitionFullResult.getRecognition().getConfidence() < threshold){
+            String msg = String.format("System found %s , but not sure, confidence only %f", recognitionFullResult.getRecognition().getName(), recognitionFullResult.getRecognition().getConfidence());
+
+            throw new RejectException(msg);
+        }
+
+
+        return  recognitionFullResult;
     }
 }

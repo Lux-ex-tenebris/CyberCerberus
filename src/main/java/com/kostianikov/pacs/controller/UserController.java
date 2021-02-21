@@ -3,9 +3,12 @@ package com.kostianikov.pacs.controller;
 import com.kostianikov.pacs.model.access.User;
 import com.kostianikov.pacs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +28,7 @@ public class UserController {
 
 
 
-    //@PreAuthorize("hasAuthoriti('read:all')")
+    @PreAuthorize("hasAuthority('read:all')")
     @GetMapping("/users")
     public String findAll(Model model){
         List<User> users = userService.findAll();
@@ -33,11 +36,22 @@ public class UserController {
         return "user-list";
     }
 
-    //@PreAuthorize("hasAuthoriti('read:self')")
+    @PreAuthorize("hasAuthority('read:self')")
     @GetMapping("/user")
     public String getUserpage(HttpServletRequest request, Model model, Principal principal){
-        model.addAttribute("name", principal.getName());
-        return "user-list";
+        model.addAttribute("user", userService.findByName(principal.getName()).get());
+        return "user-page";
+    }
+
+    @PreAuthorize("hasAuthority('write:self')")
+    @GetMapping("user-update/{id}")
+    public String setDeleted(@PathVariable Long id, HttpServletRequest request, Model model, Authentication authentication){
+
+        userService.deleteById(id);
+
+        authentication.setAuthenticated(false);
+
+        return "user-page";
     }
 
 

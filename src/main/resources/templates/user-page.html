@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:switch="${user}">
+    <h2 th:case="null">User no found!</h2>
+    <div th:case="*">
+        <ul>
+            <li th:text="${user.id}"></li>
+            <li th:text="${user.name}"></li>
+            <li th:text="${user.networkid}"></li>
+            <li><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a></li>
+
+        </ul>
+
+
+    </div>
+</div>
+
+</body>
+</html>

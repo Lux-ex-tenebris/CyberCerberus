@@ -1,6 +1,7 @@
 package com.kostianikov.pacs.security;
 
 import com.kostianikov.pacs.controller.error.NoFaceException;
+import com.kostianikov.pacs.controller.error.RejectException;
 import com.kostianikov.pacs.model.data.RecognitionFullResult;
 import com.kostianikov.pacs.service.RequestToPyService;
 import com.kostianikov.pacs.service.StorageService;
@@ -48,9 +49,12 @@ public class DoubleImageAuthenticationFilter  extends UsernamePasswordAuthentica
             recognitionFullResult.setImageVPreview(storageService.save(fileV,"V"));
             recognitionFullResult.setImageRPreview(storageService.save(fileR,"R"));
             recognitionFullResult = requestToPyService.processImageFile(recognitionFullResult);
-        } catch (NoFaceException e) {
-            return "I can`t found good faces, maybe it is spoofing?";
+        } catch (NoFaceException | RejectException e) {
+            return null;
         }
+
+
+
 
         return recognitionFullResult.getRecognition().getName();
     }

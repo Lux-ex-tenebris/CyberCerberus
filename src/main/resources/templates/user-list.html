@@ -5,12 +5,7 @@
     <title>Users</title>
 </head>
 <body>
-<div th:switch="${name}">
-    <h2 th:case="null">User no found!</h2>
-    <div th:case="*">
-        <b th:text="${name}"></b>
-    </div>
-</div>
+
 <div th:switch="${users}">
     <h2 th:case="null">No list users found!</h2>
     <div th:case="*">
@@ -20,7 +15,7 @@
             <tr>
                 <th>Id</th>
                 <th>First name</th>
-                <th>Last name</th>
+                <th>Neural ID</th>
             </tr>
             </thead>
             <tbody>
@@ -28,7 +23,6 @@
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.networkid}"></td>
-                <td th:text="${user.pathtophoto}"></td>
                 <td><a th:href="@{user-update/{id}(id=${user.id})}">Edit</a></td>
                 <td><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a></td>
             </tr>

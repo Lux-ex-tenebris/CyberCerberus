@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum Role {
-    GUEST(Set.of(Permission.UPLOAD_FILE)),
+    //GUEST(Set.of(Permission.UPLOAD_FILE)),
     USER(Set.of(Permission.READ_SELF, Permission.WRIRE_SELF)),
     ADMIN(Set.of(Permission.READ_SELF, Permission.WRIRE_SELF, Permission.READ_ALL));
 

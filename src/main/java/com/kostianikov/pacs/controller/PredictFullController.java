@@ -2,6 +2,7 @@ package com.kostianikov.pacs.controller;
 
 
 import com.kostianikov.pacs.controller.error.NoFaceException;
+import com.kostianikov.pacs.controller.error.RejectException;
 import com.kostianikov.pacs.controller.error.ServiceException;
 import com.kostianikov.pacs.model.data.Recognition;
 import com.kostianikov.pacs.model.data.RecognitionFullResult;
@@ -49,6 +50,9 @@ public class PredictFullController {
         this.storageService = storageService;
     }
 
+    @RequestMapping(value = "/reject", method = RequestMethod.GET)
+    public String getReject() { return "rejected-form";}
+
     @RequestMapping(value = "/uploadForm", method = RequestMethod.GET)
     public String handleGetForm() {
         return "upload-full-form";
@@ -65,41 +69,41 @@ public class PredictFullController {
     }
 
 
-    @RequestMapping(value = "/uploadForm1", method = RequestMethod.POST)
-    public String handleUploadForm(@RequestParam(value = "fileV") MultipartFile fileV,
-                                   @RequestParam(value = "fileR") MultipartFile fileR,
-                                   @Value("${tensor.model.threshold}") float threshold,
-                                   Model model,
-                                   HttpServletRequest httpServletRequest) {
-        log.debug("Image upload requested");
-        //RecognitionResult recognitionResult = classifierService.processImageFile(file);
-        RecognitionFullResult recognitionFullResult = null;
-
-        try {
-            recognitionFullResult = new RecognitionFullResult();
-            recognitionFullResult.setImageVPreview(storageService.save(fileV,"V"));
-            recognitionFullResult.setImageRPreview(storageService.save(fileR,"R"));
-            recognitionFullResult = requestToPyService.processImageFile(recognitionFullResult);
-        } catch (NoFaceException e) {
-            model.addAttribute("message", "I can`t found good faces, maybe it is spoofing?");
-            return "rejected-form";
-        }
-
-        log.debug("Found objects: {}", recognitionFullResult.getRecognition());
-        if (recognitionFullResult.getRecognition() == null) {
-            model.addAttribute("message", "No objects found");
-        } else {
-            if(recognitionFullResult.getRecognition().getConfidence() < threshold){
-                String msg = String.format("System found %s , but not sure, confidence only %f", recognitionFullResult.getRecognition().getName(), recognitionFullResult.getRecognition().getConfidence());
-                model.addAttribute("message", msg);
-                return "rejected-form";
-            }
-            //model.addAttribute("recognition", recognition);
-            model.addAttribute("recognitionFullResult", recognitionFullResult);
-        }
-
-        return "upload-full-form";
-    }
+//    @RequestMapping(value = "/uploadForm", method = RequestMethod.POST)
+//    public String handleUploadForm(@RequestParam(value = "fileV") MultipartFile fileV,
+//                                   @RequestParam(value = "fileR") MultipartFile fileR,
+//                                   @Value("${tensor.model.threshold}") float threshold,
+//                                   Model model,
+//                                   HttpServletRequest httpServletRequest) {
+//        log.debug("Image upload requested");
+//        //RecognitionResult recognitionResult = classifierService.processImageFile(file);
+//        RecognitionFullResult recognitionFullResult = null;
+//
+//        try {
+//            recognitionFullResult = new RecognitionFullResult();
+//            recognitionFullResult.setImageVPreview(storageService.save(fileV,"V"));
+//            recognitionFullResult.setImageRPreview(storageService.save(fileR,"R"));
+//            recognitionFullResult = requestToPyService.processImageFile(recognitionFullResult);
+//        } catch (NoFaceException | RejectException e) {
+//            model.addAttribute("message", "I can`t found good faces, maybe it is spoofing?");
+//            return "rejected-form";
+//        }
+//
+//        log.debug("Found objects: {}", recognitionFullResult.getRecognition());
+//        if (recognitionFullResult.getRecognition() == null) {
+//            model.addAttribute("message", "No objects found");
+//        } else {
+//            if(recognitionFullResult.getRecognition().getConfidence() < threshold){
+//                String msg = String.format("System found %s , but not sure, confidence only %f", recognitionFullResult.getRecognition().getName(), recognitionFullResult.getRecognition().getConfidence());
+//                model.addAttribute("message", msg);
+//                return "rejected-form";
+//            }
+//            //model.addAttribute("recognition", recognition);
+//            model.addAttribute("recognitionFullResult", recognitionFullResult);
+//        }
+//
+//        return "upload-full-form";
+//    }
 
     @ExceptionHandler(RuntimeException.class)
     public ModelAndView doResolveException(RuntimeException e) {
